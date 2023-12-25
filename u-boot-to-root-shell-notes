@@ -1,3 +1,16 @@
+I never updated my firmware this is for version 
+
+This assumes your connected to the uart with serial term app.
+As soon as you apply power start pounding esc to enter u-boot once in
+
+setenv bootargs console=ttyS1,115200n8 mem=82M@0x0 rmem=46M@0x5200000 init=/bin/sh rootfstype=squashfs root=/dev/mtdblock2 rw mtdparts=jz_sfc:256k(boot),2048k(kernel),3392k(root),640k(driver),4736k(appfs),4736k(backupa),256k(config),256k(para),-(flag)
+
+## then
+
+boot
+
+## when you get the command prompt enter the following
+
 mount -t tmpfs none /dev
 mount -t tmpfs none /var
 mkdir /var/run
@@ -45,3 +58,16 @@ connect.sh
 /system/bin/sys_monitor.sh &
 #### 
 
+## to load usb/scsi modules just use insmod IE
+insmod sg.ko
+insmod scsi_mod.ko
+insmod sd_mod.ko
+insmod usb-storage.ko
+
+## to get the files to the device i installed apache on my pc copied them
+## to /var/www/html and on wyze i just used wget
+cd /tmp
+wget http://(your pc's ip address/sg.ko
+
+## after downloading copy them to /system/bin for persistence 
+cp /tmp/*.ko /system/bin/
