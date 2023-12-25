@@ -1,0 +1,47 @@
+mount -t tmpfs none /dev
+mount -t tmpfs none /var
+mkdir /var/run
+mount proc
+mount sys
+echo /sbin/mdev > /proc/sys/kernel/hotplug
+/sbin/mdev -s 
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+export PATH=/system/bin:$PATH
+export LD_LIBRARY_PATH=/system/lib
+export LD_LIBRARY_PATH=/backup:/thirdlib:$LD_LIBRARY_PATH
+ifconfig lo up
+mount -t jffs2 /dev/mtdblock6 /configs
+mount -t jffs2 /dev/mtdblock4 /system
+mount -t squashfs /dev/mtdblock3 /driver
+mount -t jffs2 /dev/mtdblock5 /backupa
+mount -t jffs2 /dev/mtdblock7 /params
+mount -t tmpfs none /tmp
+vi /configs/.user_config
+    add ssid password and encryption type
+vi /system/bin/wpa.conf
+    same
+
+cd /system
+insmod /system/bin/tx-isp-t31.ko isp_clk=150000000
+insmod /driver/sample_pwm_core.ko
+insmod /driver/sample_pwm_hal.ko
+insmod /driver/audio.ko spk_gpio=-1 alc_mode=0
+insmod /driver/avpu.ko
+insmod /driver/sinfo.ko
+insmod /driver/rtl8189ftv.ko
+insmod /system/bin/speakerctl.ko
+echo 100 > /proc/sys/vm/swappiness
+echo 16777216 > /sys/block/zram0/disksize
+mkswap /dev/zram0
+swapon /dev/zram0
+export LD_LIBRARY_PATH=/tmp/motion_lib:$LD_LIBRARY_PATH
+connect.sh   
+#### these can cause issues
+/tmp/localsdk_shellcall/
+/system/bin/sdkshellcalltool &
+/system/bin/assis &
+/system/bin/hl_client &
+/system/bin/iCamera &
+/system/bin/sys_monitor.sh &
+#### 
+
